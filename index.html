@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>심리학 탐정 사무소: 마음의 비밀과 문법의 열쇠</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=BM+DOHYUN&family=BM+JUA&family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            deepNavy: '#0f172a',
+            boardBg: '#1e293b',
+            cardBg: '#1e293b',
+            accentTeal: '#14b8a6',
+            accentYellow: '#f59e0b',
+            accentPink: '#ec4899',
+            accentIndigo: '#6366f1',
+            accentGreen: '#10b981'
+          },
+          fontFamily: {
+            title: ['BM DOHYUN', 'sans-serif'],
+            body: ['BM JUA', 'sans-serif'],
+            sans: ['Noto Sans KR', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0f172a;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(20, 184, 166, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.12) 0%, transparent 40%),
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.02) 3px, rgba(255, 255, 255, 0.02) 6px);
+      color: #f8fafc;
+      font-family: 'BM JUA', sans-serif;
+      min-height: 100vh;
+      user-select: none;
+    }
+
+    .case-notebook {
+      background: #1e293b;
+      border: 2px solid #334155;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+      background-image: repeating-linear-gradient(#1e293b 0px, #1e293b 31px, #334155 32px);
+    }
+
+    .chip-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    }
+    .chip-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    }
+
+    .partner-prompt {
+      animation: bounceSmall 2s infinite ease-in-out;
+    }
+    @keyframes bounceSmall {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #14b8a6; }
+  </style>
+</head>
+
+<body class="flex flex-col min-h-screen justify-between relative selection:bg-accentTeal selection:text-deepNavy">
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="border-b border-slate-700/80 bg-deepNavy/90 backdrop-blur sticky top-0 z-40 px-4 py-3 shadow-md">
+    <div class="max-w-5xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="showScreen('screen-hub')">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-accentTeal to-accentIndigo flex items-center justify-center text-xl shadow-lg">
+          🧠
+        </div>
+        <div>
+          <h1 class="font-title text-lg md:text-2xl text-accentTeal tracking-wide flex items-center gap-2">
+            심리학 탐정 사무소
+            <span class="text-xs px-2 py-0.5 rounded-full bg-accentIndigo/30 text-indigo-300 font-sans border border-indigo-400/30">교과서 110p & 120p</span>
+          </h1>
+          <p class="text-xs font-sans text-slate-400">마음의 문제를 해결하고 문법 단서를 완성하라!</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <button id="sound-toggle" onclick="toggleSound()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-accentYellow border border-slate-700 text-sm flex items-center space-x-2 transition">
+          <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+          <span class="hidden sm:inline">효과음</span>
+        </button>
+
+        <button onclick="toggleSummaryModal()" class="px-3.5 py-1.5 rounded-xl bg-accentTeal hover:bg-teal-600 text-deepNavy font-title text-sm flex items-center space-x-1.5 shadow-lg transition">
+          <i class="fa-solid fa-book-open"></i>
+          <span>교과서 요약 노트</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-grow flex items-center justify-center p-3 md:p-6 max-w-5xl mx-auto w-full relative">
+
+    <!-- SCREEN 1: INTRO & 2-PLAYER SETUP -->
+    <section id="screen-intro" class="w-full max-w-3xl bg-cardBg border border-slate-700 rounded-3xl p-6 md:p-10 shadow-2xl text-center space-y-6">
+      <div class="inline-flex items-center gap-2 px-4 py-1 bg-teal-950/80 text-accentTeal border border-teal-800/60 rounded-full text-xs md:text-sm font-sans font-bold">
+        <i class="fa-solid fa-users"></i> 2인 1조 하브루타 협동 탐정 미션
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="font-title text-3xl md:text-5xl text-accentYellow tracking-wide leading-tight">
+          Psychology Solves Your Problems<br>
+          <span class="text-accentTeal">심리학 탐정단 & 문법 열쇠</span>
+        </h2>
+        <p class="text-slate-300 text-sm md:text-base font-sans leading-relaxed pt-1">
+          우리가 겪는 3가지 일상 고민(긴장, 말 못할 비밀, 라이벌 관계)을<br class="hidden sm:inline">
+          교과서의 심리학 이론과 <strong class="text-accentPink">[분사구문]</strong>, <strong class="text-accentYellow">[Not only A but also B]</strong>로 명쾌하게 해결해 보세요!
+        </p>
+      </div>
+
+      <!-- Role Setting Box -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left font-sans">
+        <div class="bg-slate-900/90 p-4 rounded-2xl border border-teal-500/30">
+          <div class="flex items-center gap-2 font-title text-accentTeal text-base mb-1">
+            <span>🗣️ 탐정 A : 질문자 (Questioner)</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            화면에 표시되는 <strong>[파트너에게 질문하기]</strong> 카드를 소리 내어 파트너에게 읽어주고 토의를 주도합니다.
+          </p>
+        </div>
+        <div class="bg-slate-900/90 p-4 rounded-2xl border border-indigo-500/30">
+          <div class="flex items-center gap-2 font-title text-indigo-300 text-base mb-1">
+            <span>🧩 탐정 B : 해결사 (Solver)</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            질문을 듣고 교과서 지문과 심리학 원리를 바탕으로 단어 조각을 조립하여 정답을 완성합니다. (역할 교대 가능!)
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="startMissionHub()" class="px-8 py-4 bg-gradient-to-r from-accentTeal to-emerald-500 hover:from-teal-500 hover:to-emerald-600 text-deepNavy font-title text-xl rounded-2xl shadow-xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 mx-auto">
+          <span>사건 의뢰소 입장하기</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: CASE SELECTION HUB -->
+    <section id="screen-hub" class="hidden w-full space-y-6">
+      <div class="text-center space-y-2">
+        <h2 class="font-title text-2xl md:text-4xl text-accentYellow">심리학 의뢰 파일 선택</h2>
+        <p class="text-slate-300 font-sans text-sm md:text-base">해결하고 싶은 사건을 선택해 파트너와 함께 의뢰를 완료하세요.</p>
+      </div>
+
+      <!-- Case Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Case 1: 110p Problem 1 & 120p Q5 -->
+        <div onclick="openCase('case1')" class="bg-cardBg border-2 border-slate-700 hover:border-accentTeal rounded-3xl p-5 cursor-pointer transition transform hover:-translate-y-2 flex flex-col justify-between relative group shadow-xl">
+          <div id="badge-case1" class="hidden absolute top-4 right-4 bg-accentGreen text-deepNavy w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shadow">
+            ✓
+          </div>
+          <div class="space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-teal-950 border border-teal-500/40 flex items-center justify-center text-3xl">
+              🦸‍♀️
+            </div>
+            <div>
+              <span class="text-xs text-accentTeal font-sans uppercase font-bold tracking-wider">CASE 01 • 110p Problem 1</span>
+              <h3 class="font-title text-xl text-white mt-1 group-hover:text-accentTeal transition">원더우먼 파워 자세</h3>
+              <p class="text-xs text-slate-300 font-sans mt-2 leading-relaxed">
+                "중요한 발표나 시험 전 극도로 긴장될 때, 몸의 자세를 바꿔 마음을 다스리는 심리학 비법은?"
+              </p>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-700 flex justify-between items-center text-xs font-sans text-slate-400">
+            <span>핵심 문법: 분사구문</span>
+            <span class="text-accentTeal font-bold">수사 시작 →</span>
+          </div>
+        </div>
+
+        <!-- Case 2: 110p Problem 2 & 120p 태호 본문 -->
+        <div onclick="openCase('case2')" class="bg-cardBg border-2 border-slate-700 hover:border-accentPink rounded-3xl p-5 cursor-pointer transition transform hover:-translate-y-2 flex flex-col justify-between relative group shadow-xl">
+          <div id="badge-case2" class="hidden absolute top-4 right-4 bg-accentGreen text-deepNavy w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shadow">
+            ✓
+          </div>
+          <div class="space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-pink-950 border border-pink-500/40 flex items-center justify-center text-3xl">
+              🚆
+            </div>
+            <div>
+              <span class="text-xs text-accentPink font-sans uppercase font-bold tracking-wider">CASE 02 • 120p 태호의 기차 여행</span>
+              <h3 class="font-title text-xl text-white mt-1 group-hover:text-accentPink transition">기차 안 낯선 사람의 비밀</h3>
+              <p class="text-xs text-slate-300 font-sans mt-2 leading-relaxed">
+                "농부가 되고 싶은 꿈을 가족에게 털어놓지 못한 태호. 기차 옆자리 낯선 이에게 털어놓은 심리적 이유는?"
+              </p>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-700 flex justify-between items-center text-xs font-sans text-slate-400">
+            <span>핵심: 분사구문 & Q7, Q8</span>
+            <span class="text-accentPink font-bold">수사 시작 →</span>
+          </div>
+        </div>
+
+        <!-- Case 3: 110p Problem 3 & 120p Q6 -->
+        <div onclick="openCase('case3')" class="bg-cardBg border-2 border-slate-700 hover:border-accentIndigo rounded-3xl p-5 cursor-pointer transition transform hover:-translate-y-2 flex flex-col justify-between relative group shadow-xl">
+          <div id="badge-case3" class="hidden absolute top-4 right-4 bg-accentGreen text-deepNavy w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shadow">
+            ✓
+          </div>
+          <div class="space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-indigo-950 border border-indigo-500/40 flex items-center justify-center text-3xl">
+              🤝
+            </div>
+            <div>
+              <span class="text-xs text-accentIndigo font-sans uppercase font-bold tracking-wider">CASE 03 • 110p Problem 3</span>
+              <h3 class="font-title text-xl text-white mt-1 group-hover:text-accentIndigo transition">라이벌을 친구로 만드는 마법</h3>
+              <p class="text-xs text-slate-300 font-sans mt-2 leading-relaxed">
+                "나를 미워하는 라이벌에게 '작은 부탁'을 했을 때 왜 친구가 될까? 벤저민 프랭클린 효과의 진실!"
+              </p>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-700 flex justify-between items-center text-xs font-sans text-slate-400">
+            <span>핵심: Not only 구문</span>
+            <span class="text-accentIndigo font-bold">수사 시작 →</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bonus Stage: Word & Grammar Clinic -->
+      <div class="bg-slate-900/90 border border-slate-700 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center md:text-left">
+          <div class="flex items-center justify-center md:justify-start gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-accentYellow text-deepNavy text-xs font-title">보너스 스테이지</span>
+            <h3 class="font-title text-lg text-white">120p 단서 감식반 (어휘 Q5 & 문법 Q6 실전 테스트)</h3>
+          </div>
+          <p class="text-xs font-sans text-slate-400">틀린 어휘를 바로잡고 빈칸에 들어갈 올바른 문법 형태를 선택하세요.</p>
+        </div>
+        <button onclick="openClinic()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-accentYellow border border-accentYellow/40 rounded-xl font-body text-sm transition">
+          감식반 문제 풀기
+        </button>
+      </div>
+
+      <!-- Final Master Certification Button -->
+      <div class="text-center pt-2">
+        <button id="btn-final-cert" onclick="openFinalEvaluation()" disabled class="px-8 py-4 bg-slate-800 text-slate-500 rounded-2xl font-title text-lg cursor-not-allowed shadow transition">
+          <i class="fa-solid fa-award mr-2"></i> 모든 사건 완료 후 탐정 라이선스 발급
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: INTERACTIVE QUESTION & QUIZ SCREEN -->
+    <section id="screen-case-play" class="hidden w-full max-w-3xl bg-cardBg border border-slate-700 rounded-3xl p-5 md:p-8 shadow-2xl">
+      <!-- Header -->
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3 mb-5">
+        <button onclick="showScreen('screen-hub')" class="text-slate-400 hover:text-white text-xs font-sans flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-arrow-left"></i> 의뢰 목록으로
+        </button>
+        <div class="flex items-center gap-2">
+          <span id="case-header-icon" class="text-2xl">🦸‍♀️</span>
+          <span id="case-header-title" class="font-title text-lg text-accentTeal">사건 제목</span>
+        </div>
+        <span id="case-step-badge" class="px-2.5 py-1 rounded-full bg-slate-800 text-accentYellow text-xs font-title border border-slate-700">
+          단서 1 / 2
+        </span>
+      </div>
+
+      <!-- Partner Discussion Card (Habrutah Prompt) -->
+      <div class="bg-gradient-to-r from-teal-950/70 to-slate-900 border border-teal-500/40 rounded-2xl p-4 mb-5 partner-prompt shadow">
+        <div class="flex items-center gap-2 text-xs font-title text-accentTeal mb-1">
+          <i class="fa-solid fa-comments"></i> 🗣️ [질문 탐정] 파트너에게 소리 내어 질문하세요!
+        </div>
+        <p id="partner-question-text" class="text-sm md:text-base font-sans font-semibold text-slate-100">
+          "What should you do before big events?"
+        </p>
+        <p id="partner-question-kor" class="text-xs text-slate-400 font-sans mt-0.5">
+          (중요한 일 전에 긴장될 때 넌 무엇을 해야 한다고 생각하니?)
+        </p>
+      </div>
+
+      <!-- Solution Grammar Clue -->
+      <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700 mb-5 space-y-1">
+        <div class="flex justify-between items-center text-xs font-sans">
+          <span class="text-accentPink font-bold flex items-center gap-1">
+            <i class="fa-solid fa-key"></i> <span id="quiz-target-grammar">목표 문법: 분사구문</span>
+          </span>
+          <span class="text-slate-400">교과서 핵심 구문 완성</span>
+        </div>
+        <p id="quiz-korean-meaning" class="text-sm md:text-base text-slate-200 font-sans font-medium">
+          한국어 해석 문장이 여기에 표시됩니다.
+        </p>
+      </div>
+
+      <!-- Sentence Drop Area -->
+      <div class="mb-5 space-y-2">
+        <div class="flex justify-between items-center px-1">
+          <span class="text-xs text-slate-400 font-sans">조합된 문장 (클릭하면 단어 회수)</span>
+          <span class="text-xs text-teal-400 font-sans">순서대로 단어를 눌러보세요</span>
+        </div>
+        <div id="quiz-answer-zone" class="min-h-[75px] bg-slate-950 border-2 border-dashed border-teal-500/50 rounded-2xl p-3 flex flex-wrap gap-2 items-center">
+          <!-- Chips placed here -->
+        </div>
+      </div>
+
+      <!-- Word Chips Bank -->
+      <div class="mb-6 space-y-2">
+        <span class="block text-xs text-slate-400 font-sans px-1">사용 가능한 단어 조각 칩</span>
+        <div id="quiz-chips-bank" class="min-h-[70px] bg-slate-900/60 rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center border border-slate-700">
+          <!-- Available Chips -->
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-between items-center pt-2">
+        <button onclick="resetCaseWords()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-sans transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> 단어 초기화
+        </button>
+
+        <button onclick="verifyCaseSentence()" class="px-6 py-3 bg-accentTeal hover:bg-teal-500 text-deepNavy font-title text-base rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+          <i class="fa-solid fa-check"></i>
+          <span>정답 확인 및 단서 획득</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: VOCABULARY & GRAMMAR CLINIC (120p Q5 & Q6) -->
+    <section id="screen-clinic" class="hidden w-full max-w-3xl bg-cardBg border border-slate-700 rounded-3xl p-5 md:p-8 shadow-2xl space-y-6">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <div>
+          <h2 class="font-title text-xl text-accentYellow flex items-center gap-2">
+            <i class="fa-solid fa-stethoscope text-accentTeal"></i> 120p 문법 & 어휘 종합 감식소
+          </h2>
+          <p class="text-xs font-sans text-slate-400">교과서 120쪽 Q5, Q6 문제를 파트너와 토의하여 바른 답을 터치하세요.</p>
+        </div>
+        <button onclick="showScreen('screen-hub')" class="text-slate-400 hover:text-white text-xs font-sans">
+          닫기 <i class="fa-solid fa-xmark ml-1"></i>
+        </button>
+      </div>
+
+      <!-- Q5 Vocabulary Fix -->
+      <div class="space-y-3 font-sans">
+        <h3 class="font-title text-sm text-accentTeal flex items-center gap-1.5">
+          <span>Q5</span> 밑줄 친 부분을 바르게 고치시오 (선택형 터치)
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Item 1 -->
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1.5">
+            <p class="text-xs text-slate-300">(1) My job is too <u class="text-accentPink font-bold">stress</u>!</p>
+            <div class="flex gap-2">
+              <button onclick="checkClinicItem(this, true, 'stressful')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">stressful</button>
+              <button onclick="checkClinicItem(this, false)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">stressing</button>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1.5">
+            <p class="text-xs text-slate-300">(2) His skills are almost <u class="text-accentPink font-bold">profession</u>.</p>
+            <div class="flex gap-2">
+              <button onclick="checkClinicItem(this, false)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">professioner</button>
+              <button onclick="checkClinicItem(this, true, 'professional')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">professional</button>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1.5">
+            <p class="text-xs text-slate-300">(3) She <u class="text-accentPink font-bold">came up</u> a great idea.</p>
+            <div class="flex gap-2">
+              <button onclick="checkClinicItem(this, true, 'came up with')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">came up with</button>
+              <button onclick="checkClinicItem(this, false)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">came on</button>
+            </div>
+          </div>
+          <!-- Item 4 -->
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1.5">
+            <p class="text-xs text-slate-300">(4) Stand with your feet <u class="text-accentPink font-bold">part</u>.</p>
+            <div class="flex gap-2">
+              <button onclick="checkClinicItem(this, false)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">partly</button>
+              <button onclick="checkClinicItem(this, true, 'apart')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">apart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 Grammar Fix (Updated: Interactive Choices) -->
+      <div class="space-y-3 font-sans pt-2 border-t border-slate-800">
+        <h3 class="font-title text-sm text-accentIndigo flex items-center gap-1.5">
+          <span>Q6</span> 괄호 안에서 알맞은 표현을 선택하시오 (선택형 터치)
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Item 1: Feeling vs Felt -->
+          <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 space-y-2">
+            <div>
+              <p class="text-xs text-slate-200 font-medium">
+                (1) [ <span class="text-accentTeal font-bold">______</span> ] tired, my mom went to bed early.
+              </p>
+              <span class="text-[11px] text-slate-400 block mt-0.5">💡 힌트: Because she felt tired... (분사구문)</span>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="checkClinicItem(this, true, 'Feeling')" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">
+                Feeling
+              </button>
+              <button onclick="checkClinicItem(this, false)" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">
+                Felt
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 2: but also vs as well -->
+          <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 space-y-2">
+            <div>
+              <p class="text-xs text-slate-200 font-medium">
+                (2) He is not only a good speaker [ <span class="text-accentYellow font-bold">______</span> ] a great writer.
+              </p>
+              <span class="text-[11px] text-slate-400 block mt-0.5">💡 힌트: Not only A _____ B (상관접속사)</span>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="checkClinicItem(this, true, 'but also')" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">
+                but also
+              </button>
+              <button onclick="checkClinicItem(this, false)" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition">
+                as well
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center pt-2">
+        <button onclick="showScreen('screen-hub')" class="px-6 py-2.5 bg-accentTeal text-deepNavy rounded-xl font-title text-sm shadow">
+          확인 완료 (의뢰소로 복귀)
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 5: FINAL EVALUATION & CERTIFICATE -->
+    <section id="screen-certificate" class="hidden w-full max-w-2xl bg-cardBg border-2 border-accentYellow/70 rounded-3xl p-6 md:p-10 shadow-2xl text-center space-y-6">
+      <div class="w-20 h-20 rounded-full bg-accentYellow/20 border-2 border-accentYellow mx-auto flex items-center justify-center text-4xl shadow-xl">
+        🎓
+      </div>
+
+      <div class="space-y-2">
+        <span class="text-xs uppercase font-sans tracking-widest text-accentTeal font-bold">OFFICIAL GRAMMAR LICENSE</span>
+        <h2 class="font-title text-2xl md:text-4xl text-accentYellow">수석 심리학 문법 탐정 인증서</h2>
+        <p class="text-xs md:text-sm font-sans text-slate-300">두 명의 탐정이 교과서 110p와 120p의 모든 심리 및 문법 의뢰를 성공적으로 해결하였습니다.</p>
+      </div>
+
+      <!-- Certificate Content Card -->
+      <div class="case-notebook p-6 rounded-2xl text-left font-sans text-xs md:text-sm space-y-3 border border-slate-600">
+        <div class="flex justify-between items-center border-b border-slate-600 pb-2">
+          <span class="text-slate-400">수사 팀 (2인 1조):</span>
+          <span class="font-title text-accentTeal text-base">명탐정 콤비</span>
+        </div>
+        <p class="leading-relaxed text-slate-200">
+          위 학생들은 <strong>원더우먼 파워 자세</strong>, <strong>기차 안 태호의 심리</strong>, <strong>벤저민 프랭클린 효과</strong>를 분석하여, <em>분사구문</em>과 <em>Not only A but also B</em> 구문을 완벽하게 마스터하였음을 증명합니다.
+        </p>
+        <div class="pt-2 flex justify-between text-xs text-slate-400">
+          <span>평가 등급: <strong>GRADE S+ (수석 탐정)</strong></span>
+          <span>확인: 중학교 영어과</span>
+        </div>
+      </div>
+
+      <div class="flex justify-center gap-3 pt-2">
+        <button onclick="showScreen('screen-hub')" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-title text-sm transition">
+          사건 보관함 보기
+        </button>
+        <button onclick="restartAllMissions()" class="px-6 py-3 bg-accentTeal hover:bg-teal-500 text-deepNavy rounded-xl font-title text-sm transition">
+          처음부터 다시 도전
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= TEXTBOOK SUMMARY MODAL ================= -->
+  <div id="modal-summary" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-slate-900 border border-teal-500/50 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-title text-lg text-accentYellow flex items-center gap-2">
+          <i class="fa-solid fa-book-bookmark text-accentTeal"></i> 교과서 110p & 120p 핵심 요약
+        </h3>
+        <button onclick="toggleSummaryModal()" class="text-slate-400 hover:text-white text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 font-sans text-xs md:text-sm text-slate-300 leading-relaxed">
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <h4 class="font-title text-accentTeal mb-1">1. Problem 1: 큰일 전 긴장 (110p)</h4>
+          <p>• 해결책: Stand tall like Wonder Woman for 2 minutes (feet apart).</p>
+          <p>• 효과: You will become confident.</p>
+          <p>• 원리: Our bodies change our minds, and our minds change our behavior.</p>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <h4 class="font-title text-accentPink mb-1">2. Problem 2 & 태호 이야기 (110p, 120p 7-8)</h4>
+          <p>• 문제: 부모님/친구에게 말 못할 고민 (태호: 농부가 되고 싶음).</p>
+          <p>• 해결책: 기차 안 낯선 사람(stranger)에게 털어놓기.</p>
+          <p>• 원리: 평가받거나(being judged) 다시 만날 걱정이 없기 때문!</p>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <h4 class="font-title text-accentIndigo mb-1">3. Problem 3: 벤저민 프랭클린 효과 (110p)</h4>
+          <p>• 문제: 라이벌을 친구로 만들기.</p>
+          <p>• 해결책: 라이벌에게 부탁(favor)을 하기.</p>
+          <p>• 원리: 한 번 호의를 베푼 사람은 다시 도와주고 싶어 함.</p>
+        </div>
+      </div>
+
+      <button onclick="toggleSummaryModal()" class="w-full py-2.5 bg-accentTeal text-deepNavy rounded-xl font-title text-sm">
+        이해했습니다 (닫기)
+      </button>
+    </div>
+  </div>
+
+  <!-- Custom Alert Notification Modal -->
+  <div id="modal-alert" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl">
+      <div id="alert-icon" class="w-14 h-14 rounded-full mx-auto flex items-center justify-center text-3xl"></div>
+      <h3 id="alert-title" class="font-title text-xl text-white">알림</h3>
+      <p id="alert-message" class="text-xs md:text-sm font-sans text-slate-300 leading-relaxed"></p>
+      <button onclick="closeAlertModal()" class="w-full py-2.5 bg-accentTeal text-deepNavy font-title rounded-xl text-sm">
+        확인
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-deepNavy/90 py-2.5 text-center text-xs text-slate-500 font-sans">
+    <span>중학교 3학년 5단원 • Psychology Solves Your Problems • 하브루타 협동 웹앱</span>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* ================= SOUND SYNTHESIZER ================= */
+    let audioCtx = null;
+    let isSoundOn = true;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playSound(type) {
+      if (!isSoundOn) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(250, now + 0.05);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now); // A4
+        osc.frequency.setValueAtTime(554.37, now + 0.08); // C#5
+        osc.frequency.setValueAtTime(659.25, now + 0.16); // E5
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } else if (type === 'fanfare') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.1);
+        osc.frequency.setValueAtTime(783.99, now + 0.2);
+        osc.frequency.setValueAtTime(1046.50, now + 0.3);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
+        osc.start(now);
+        osc.stop(now + 0.7);
+      }
+    }
+
+    function toggleSound() {
+      isSoundOn = !isSoundOn;
+      const icon = document.getElementById('sound-icon');
+      if (isSoundOn) {
+        icon.className = 'fa-solid fa-volume-high';
+        playSound('click');
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark';
+      }
+    }
+
+    /* ================= CURRICULUM DATASET ================= */
+    const CASE_DATA = {
+      case1: {
+        id: 'case1',
+        title: '원더우먼 파워 자세의 비밀',
+        icon: '🦸‍♀️',
+        steps: [
+          {
+            partnerEng: "What posture should we take when we are nervous before big events?",
+            partnerKor: "(큰 시험이나 발표 전에 긴장될 때 어떤 자세를 취해야 할까?)",
+            targetGrammar: "분사구문 (동시/연속 동작)",
+            meaning: "두 발을 벌리고 서서, 너는 원더우먼처럼 행동할 수 있다.",
+            correct: ["Standing", "with", "your", "feet", "apart,", "you", "can", "become", "confident."],
+            scrambled: ["feet", "you", "apart,", "Standing", "confident.", "become", "with", "can", "your"]
+          },
+          {
+            partnerEng: "How does our posture change our minds according to psychology?",
+            partnerKor: "(심리학에 따르면 자세가 어떻게 우리 마음을 바꿀까?)",
+            targetGrammar: "목적어 & 병렬 구문 (110p Explanation)",
+            meaning: "우리의 몸은 마음을 바꾸고, 우리의 마음은 행동을 바꿀 수 있다.",
+            correct: ["Our", "bodies", "change", "our", "minds,", "and", "our", "minds", "change", "behavior."],
+            scrambled: ["change", "behavior.", "minds,", "bodies", "our", "and", "Our", "change", "our", "minds"]
+          }
+        ]
+      },
+      case2: {
+        id: 'case2',
+        title: '기차 안 태호의 낯선 상담소',
+        icon: '🚆',
+        steps: [
+          {
+            partnerEng: "Why did Taeho take a day trip on a train by himself?",
+            partnerKor: "(태호는 왜 혼자 기차 당일치기 여행을 떠났을까? 120p 본문 참고)",
+            targetGrammar: "분사구문 (원인/목적)",
+            meaning: "마음을 정리하고 싶어서, 태호는 기차 여행을 떠나기로 결심했다.",
+            correct: ["Wanting", "to", "clear", "his", "mind,", "Taeho", "decided", "to", "take", "a", "trip."],
+            scrambled: ["decided", "to", "Wanting", "a", "his", "mind,", "take", "Taeho", "clear", "trip.", "to"]
+          },
+          {
+            partnerEng: "Why do we feel better when telling our problems to a stranger?",
+            partnerKor: "(왜 낯선 사람에게 고민을 털어놓으면 기분이 훨씬 나아질까?)",
+            targetGrammar: "동명사 수동형 (being judged)",
+            meaning: "우리는 평가받거나 낯선 사람을 다시 만날 걱정을 할 필요가 없다.",
+            correct: ["We", "do", "not", "worry", "about", "being", "judged", "or", "seeing", "them", "again."],
+            scrambled: ["being", "them", "worry", "or", "judged", "We", "seeing", "not", "again.", "do", "about"]
+          }
+        ]
+      },
+      case3: {
+        id: 'case3',
+        title: '라이벌을 친구로 만든 벤저민 프랭클린',
+        icon: '🤝',
+        steps: [
+          {
+            partnerEng: "What is the best way to turn your rival into your friend?",
+            partnerKor: "(너의 라이벌을 친구로 바꾸는 가장 현명한 심리학적 방법은?)",
+            targetGrammar: "4형식 문장 (Ask rival a favor)",
+            meaning: "너의 라이벌에게 너에게 작은 부탁을 들어달라고 요청해 보아라.",
+            correct: ["Try", "asking", "your", "rival", "to", "do", "you", "a", "small", "favor."],
+            scrambled: ["you", "favor.", "asking", "a", "small", "rival", "your", "to", "Try", "do"]
+          },
+          {
+            partnerEng: "How can we describe a person who is both a speaker and a writer?",
+            partnerKor: "(말도 잘할 뿐만 아니라 글도 뛰어난 사람을 어떻게 표현할까? 120p Q6)",
+            targetGrammar: "Not only A but also B 구문",
+            meaning: "그는 훌륭한 연설가였을 뿐만 아니라 훌륭한 작가이기도 했다.",
+            correct: ["He", "was", "not", "only", "a", "good", "speaker", "but", "also", "a", "great", "writer."],
+            scrambled: ["good", "speaker", "a", "was", "also", "great", "not", "writer.", "He", "a", "only", "but"]
+          }
+        ]
+      }
+    };
+
+    /* ================= APP STATE ================= */
+    let activeCaseId = null;
+    let activeStepIndex = 0;
+    let assembledWords = [];
+    let completedCases = {
+      case1: false,
+      case2: false,
+      case3: false
+    };
+
+    /* ================= SCREEN CONTROLLER ================= */
+    function showScreen(screenId) {
+      playSound('click');
+      const screens = ['screen-intro', 'screen-hub', 'screen-case-play', 'screen-clinic', 'screen-certificate'];
+      screens.forEach(id => {
+        document.getElementById(id).classList.toggle('hidden', id !== screenId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function startMissionHub() {
+      showScreen('screen-hub');
+      checkProgress();
+    }
+
+    /* ================= CASE FLOW ================= */
+    function openCase(caseId) {
+      activeCaseId = caseId;
+      activeStepIndex = 0;
+      assembledWords = [];
+      loadCaseStep();
+      showScreen('screen-case-play');
+    }
+
+    function loadCaseStep() {
+      const caseItem = CASE_DATA[activeCaseId];
+      const step = caseItem.steps[activeStepIndex];
+
+      document.getElementById('case-header-icon').textContent = caseItem.icon;
+      document.getElementById('case-header-title').textContent = caseItem.title;
+      document.getElementById('case-step-badge').textContent = `단서 ${activeStepIndex + 1} / ${caseItem.steps.length}`;
+
+      document.getElementById('partner-question-text').textContent = `"${step.partnerEng}"`;
+      document.getElementById('partner-question-kor').textContent = step.partnerKor;
+      document.getElementById('quiz-target-grammar').textContent = `목표: ${step.targetGrammar}`;
+      document.getElementById('quiz-korean-meaning').textContent = step.meaning;
+
+      assembledWords = [];
+      renderAnswerArea();
+      renderBankChips(step.scrambled);
+    }
+
+    function renderAnswerArea() {
+      const zone = document.getElementById('quiz-answer-zone');
+      zone.innerHTML = '';
+
+      if (assembledWords.length === 0) {
+        zone.innerHTML = `<span class="text-slate-500 font-sans text-xs italic">아래 단어 조각을 터치하여 완성하세요...</span>`;
+        return;
+      }
+
+      assembledWords.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'chip-btn px-3 py-1.5 bg-accentTeal text-deepNavy font-title text-sm md:text-base rounded-xl flex items-center gap-1';
+        btn.innerHTML = `<span>${item.text}</span> <i class="fa-solid fa-xmark text-xs opacity-60"></i>`;
+        btn.onclick = () => removeWord(idx);
+        zone.appendChild(btn);
+      });
+    }
+
+    function renderBankChips(words) {
+      const bank = document.getElementById('quiz-chips-bank');
+      bank.innerHTML = '';
+
+      words.forEach((word, idx) => {
+        const isUsed = assembledWords.some(w => w.originIdx === idx);
+        if (!isUsed) {
+          const btn = document.createElement('button');
+          btn.className = 'chip-btn px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600 font-sans font-bold text-sm md:text-base rounded-xl';
+          btn.textContent = word;
+          btn.onclick = () => addWord(word, idx);
+          bank.appendChild(btn);
+        }
+      });
+    }
+
+    function addWord(text, idx) {
+      playSound('click');
+      assembledWords.push({ text, originIdx: idx });
+      renderAnswerArea();
+      const currentScrambled = CASE_DATA[activeCaseId].steps[activeStepIndex].scrambled;
+      renderBankChips(currentScrambled);
+    }
+
+    function removeWord(index) {
+      playSound('click');
+      assembledWords.splice(index, 1);
+      renderAnswerArea();
+      const currentScrambled = CASE_DATA[activeCaseId].steps[activeStepIndex].scrambled;
+      renderBankChips(currentScrambled);
+    }
+
+    function resetCaseWords() {
+      playSound('click');
+      assembledWords = [];
+      renderAnswerArea();
+      const currentScrambled = CASE_DATA[activeCaseId].steps[activeStepIndex].scrambled;
+      renderBankChips(currentScrambled);
+    }
+
+    function verifyCaseSentence() {
+      const step = CASE_DATA[activeCaseId].steps[activeStepIndex];
+      const userText = assembledWords.map(w => w.text).join(' ');
+      const targetText = step.correct.join(' ');
+
+      if (userText === targetText) {
+        playSound('correct');
+        if (activeStepIndex === 0) {
+          showAlert('success', '단서 1 확보 성공! 🎉', '첫 번째 문장을 완벽하게 완성했습니다. 파트너와 두 번째 질문을 나누어보세요!');
+          activeStepIndex++;
+          loadCaseStep();
+        } else {
+          completedCases[activeCaseId] = true;
+          checkProgress();
+          showAlert('success', '의뢰 해결 완료! 🌟', `${CASE_DATA[activeCaseId].title}를 완벽히 해결하고 교과서 단서를 획득했습니다!`);
+          showScreen('screen-hub');
+        }
+      } else {
+        playSound('wrong');
+        showAlert('error', '문장 어순 점검 필요!', '단어 조각의 순서나 문법 형태가 맞지 않습니다. 한국어 해석과 교과서 표현을 상의해 보세요.');
+      }
+    }
+
+    function checkProgress() {
+      let count = 0;
+      Object.keys(completedCases).forEach(id => {
+        const badge = document.getElementById(`badge-${id}`);
+        if (completedCases[id]) {
+          badge.classList.remove('hidden');
+          count++;
+        }
+      });
+
+      const certBtn = document.getElementById('btn-final-cert');
+      if (count === 3) {
+        certBtn.disabled = false;
+        certBtn.className = "px-8 py-4 bg-gradient-to-r from-accentYellow to-amber-500 text-deepNavy font-title text-xl rounded-2xl shadow-xl transition transform hover:-translate-y-1 cursor-pointer animate-pulse";
+      }
+    }
+
+    /* ================= CLINIC (120p Q5 & Q6) ================= */
+    function openClinic() {
+      showScreen('screen-clinic');
+    }
+
+    function checkClinicItem(btn, isCorrect, correctWord) {
+      if (isCorrect) {
+        playSound('correct');
+        btn.className = "px-3.5 py-1.5 bg-accentGreen text-deepNavy font-bold rounded-lg text-xs shadow pointer-events-none";
+        btn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> 정답! ${correctWord ? `(${correctWord})` : ''}`;
+        
+        // Disable sibling buttons
+        const siblings = btn.parentElement.querySelectorAll('button');
+        siblings.forEach(s => {
+          if (s !== btn) {
+            s.className = "px-3.5 py-1.5 bg-slate-800/40 text-slate-500 rounded-lg text-xs pointer-events-none";
+          }
+        });
+      } else {
+        playSound('wrong');
+        const prevText = btn.innerHTML;
+        btn.className = "px-3.5 py-1.5 bg-accentPink text-white rounded-lg text-xs";
+        btn.innerHTML = `<i class="fa-solid fa-xmark mr-1"></i> 오답!`;
+        setTimeout(() => {
+          btn.className = "px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-200 transition";
+          btn.innerHTML = prevText;
+        }, 1200);
+      }
+    }
+
+    /* ================= FINAL CERTIFICATE ================= */
+    function openFinalEvaluation() {
+      playSound('fanfare');
+      showScreen('screen-certificate');
+    }
+
+    function restartAllMissions() {
+      completedCases = { case1: false, case2: false, case3: false };
+      ['case1', 'case2', 'case3'].forEach(id => {
+        document.getElementById(`badge-${id}`).classList.add('hidden');
+      });
+      document.getElementById('btn-final-cert').disabled = true;
+      document.getElementById('btn-final-cert').className = "px-8 py-4 bg-slate-800 text-slate-500 rounded-2xl font-title text-lg cursor-not-allowed shadow transition";
+      showScreen('screen-intro');
+    }
+
+    /* ================= MODALS ================= */
+    function toggleSummaryModal() {
+      playSound('click');
+      const m = document.getElementById('modal-summary');
+      m.classList.toggle('hidden');
+      m.classList.toggle('flex');
+    }
+
+    function showAlert(type, title, msg) {
+      const modal = document.getElementById('modal-alert');
+      const icon = document.getElementById('alert-icon');
+      document.getElementById('alert-title').textContent = title;
+      document.getElementById('alert-message').textContent = msg;
+
+      if (type === 'success') {
+        icon.className = "w-14 h-14 bg-emerald-950 text-accentGreen border border-emerald-500 rounded-full mx-auto flex items-center justify-center text-2xl";
+        icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+      } else {
+        icon.className = "w-14 h-14 bg-pink-950 text-accentPink border border-pink-500 rounded-full mx-auto flex items-center justify-center text-2xl";
+        icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAlertModal() {
+      playSound('click');
+      const modal = document.getElementById('modal-alert');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    window.onload = function() {
+      showScreen('screen-intro');
+    };
+  </script>
+</body>
+</html>
